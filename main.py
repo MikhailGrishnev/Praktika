@@ -62,12 +62,9 @@ async def index(request: Request, db: AsyncSession = Depends(get_db)):
     history = result.scalars().all()
     return templates.TemplateResponse("index.html", {"request": request, "history": history})
 
-
+# Обработка видео кадр за кадром, накладывает рамки детекции и сохраняет новый видеофайл.
+# max_frames - ограничение по количеству кадров для ускорения (можно убрать или увеличить).
 async def process_video_full(input_path: str, output_path: str, max_frames=100):
-    """
-    Обрабатывает видео кадр за кадром, накладывает рамки детекции и сохраняет новый видеофайл.
-    max_frames - ограничение по количеству кадров для ускорения (можно убрать или увеличить).
-    """
     cap = cv2.VideoCapture(input_path)
     if not cap.isOpened():
         raise RuntimeError("Не удалось открыть видео")
